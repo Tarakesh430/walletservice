@@ -5,11 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/user")
+@RequestMapping("/v1/wallet")
 public class WalletResource {
 
-    @PostMapping("/")
-    public ResponseEntity createUser(@RequestBody CreateUserRequest createUserRequest) {
-        return null;
-    }
+
 }
