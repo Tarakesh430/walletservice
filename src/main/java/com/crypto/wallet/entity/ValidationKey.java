@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "validation_key")
@@ -22,6 +21,7 @@ public class ValidationKey {
 
     @Column(name = "secret_key")
     private String secretKey;
+
     @Column(name = "is_valid", nullable = false)
     private boolean isValid;
     @Column(name = "last_validated_time", nullable = false)
