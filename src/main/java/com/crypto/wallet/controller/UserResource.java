@@ -10,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/user")
@@ -25,5 +22,11 @@ public class UserResource {
     public ResponseEntity<ApiResponse<UserDetails>> createUser(@RequestBody @Valid CreateUserRequest createUserRequest) throws Exception {
         logger.info("NEW:: CREATE USER:: NEW WALLET");
         return  ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("Successfully Created User",userService.createUser(createUserRequest)));
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDetails> getUser(@PathVariable("userId") String userId) throws Exception
+    {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(userId));
     }
 }
