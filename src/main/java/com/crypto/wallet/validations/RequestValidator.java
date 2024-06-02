@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class Validation {
-    private final Logger logger = LoggerFactory.getLogger(Validation.class);
+public class RequestValidator {
+    private final Logger logger = LoggerFactory.getLogger(RequestValidator.class);
 
 }

@@ -3,7 +3,6 @@ package com.crypto.wallet.mapper;
 import com.crypto.wallet.dto.ExchangeDto;
 import com.crypto.wallet.entity.Exchange;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

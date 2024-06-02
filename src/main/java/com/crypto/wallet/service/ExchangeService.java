@@ -13,6 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +24,11 @@ public class ExchangeService {
 
     public ExchangeDto getExchangeDetails(String exchange) throws Exception {
         logger.info("ExchangeService :: Get Exchange info :: {}", exchange);
-        return exchangeRepository.findByExchangeName(exchange).map(exchangeMapper::toDto)
-                .orElseThrow(() -> new Exception("Error in getting Exchange Details"));
+        Optional<Exchange> byExchangeName = exchangeRepository.findByExchangeName(exchange);
+        logger.info("{}",byExchangeName.isPresent());
+        return byExchangeName
+                .map(exchangeMapper::toDto).orElseThrow(()->new Exception("Exception in getting exchange details"));
+
     }
 
     public List<ExchangeDto> getExchanges(String type, Boolean isActive){
@@ -32,5 +36,15 @@ public class ExchangeService {
         Specification<Exchange> spec = Specification.where(ExchangeSpecification.hasActive(isActive))
                 .and(ExchangeSpecification.hasType(Type.fromString(type)));
         return exchangeMapper.toDto(exchangeRepository.findAll(spec));
+    }
+
+    public ExchangeDto saveExchange(ExchangeDto exchangeDto) {
+        logger.info("Saving an exchange");
+        Exchange exchange = exchangeMapper.toEntity(exchangeDto);
+        exchange.setCreateTime(System.currentTimeMillis());
+        exchange.setUpdateTime(System.currentTimeMillis());
+        exchange.setActive(true);
+        exchange = exchangeRepository.save(exchange);
+        return exchangeMapper.toDto(exchange);
     }
 }

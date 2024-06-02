@@ -8,14 +8,12 @@ import com.crypto.wallet.mapper.UserMapper;
 import com.crypto.wallet.repository.UserRepository;
 import com.crypto.wallet.request.CreateUserRequest;
 import com.crypto.wallet.response.UserDetails;
-import com.crypto.wallet.validations.Validation;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service("userService")
@@ -54,7 +52,6 @@ public class UserService {
         Optional<User> user=userRepository.findByEmailId(emailId);
         if(user.isEmpty())
             logger.info("Dengindhi");
-      //  logger.info("yfyg",user.get());
         return user.map(userMapper::toUserDetails).orElseThrow(()->new Exception("User Credentials Already Present Denguthadi"));
     }
 

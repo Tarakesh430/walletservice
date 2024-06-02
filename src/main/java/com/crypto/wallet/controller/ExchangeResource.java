@@ -34,4 +34,12 @@ public class ExchangeResource {
                 exchangeService.getExchanges(type, isActive)));
     }
 
+    @PostMapping
+    public ResponseEntity<ApiResponse<ExchangeDto>> createExchange(@RequestBody ExchangeDto exchangeDto) {
+        logger.info("Save Exchange {}",exchangeDto);
+        return ResponseEntity.ok(ApiResponse.success("Exchanges Created Successfully",
+                exchangeService.saveExchange(exchangeDto)));
+    }
+
+
 }

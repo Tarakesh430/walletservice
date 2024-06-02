@@ -16,7 +16,7 @@ public class ExchangeDto {
     private Type type;
     @JsonProperty("createdBy")
     private String createdBy;
-    @JsonProperty("is_actuve")
+    @JsonProperty("is_active")
     private boolean isActive;
     @JsonProperty("create_time")
     private long createTime;

@@ -18,15 +18,16 @@ import org.springframework.web.bind.annotation.*;
 public class UserResource {
     private final Logger logger = LoggerFactory.getLogger(UserResource.class);
     private final UserService userService;
+
     @PostMapping
     public ResponseEntity<ApiResponse<UserDetails>> createUser(@RequestBody @Valid CreateUserRequest createUserRequest) throws Exception {
         logger.info("NEW:: CREATE USER:: NEW WALLET");
-        return  ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("Successfully Created User",userService.createUser(createUserRequest)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("Successfully Created User", userService.createUser(createUserRequest)));
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDetails> getUser(@PathVariable("userId") String userId) throws Exception
-    {
-            return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(userId));
+    public ResponseEntity<UserDetails> getUser(@PathVariable("userId") String userId) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(userId));
     }
+
 }
