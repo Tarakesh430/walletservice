@@ -1,7 +1,9 @@
 package com.crypto.wallet.helper;
 
 import com.crypto.wallet.entity.*;
+import com.crypto.wallet.repository.ExchangeRepository;
 import com.crypto.wallet.repository.WalletExchangeMapRepository;
+import com.crypto.wallet.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -9,11 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class WalletHelper {
     private final Logger logger = LoggerFactory.getLogger(WalletHelper.class);
     private final WalletExchangeMapRepository walletExchangeRepository;
+    private final WalletRepository walletRepository;
 
     public Wallet createWallet() {
         Wallet wallet = new Wallet();
@@ -58,5 +63,10 @@ public class WalletHelper {
         logger.info("the Wallet {} opted for Exchange {}",walletId,exchangeId);
         return walletExchangeMap;
     }
+
+    public Wallet getWalletDetails(String walletId) throws Exception {
+        return walletRepository.findByWalletId(walletId).orElseThrow(()-> new Exception("Wallet Details Not Found"));
+    }
+
 
 }

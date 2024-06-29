@@ -32,22 +32,21 @@ public class WalletResource {
     }
 
 
-    @PatchMapping("/{walletId}/exchange/{exchangeName}")
+    @PostMapping("/{walletId}/exchange/{exchangeName}")
     public ResponseEntity<ApiResponse<String>> updateValidationKeys(@RequestBody @Validated ValidationKeyRequest validationKeyRequest,
                                                                     @PathVariable("walletId") String walletId,
                                                                     @PathVariable("exchangeName") String exchangeName) throws Exception {
-        logger.info("PATCH:: UPDATE KEY VALIDATIONS");
+        logger.info("POST:: UPDATE KEY VALIDATIONS");
         walletService.updateValidationKeys(validationKeyRequest, exchangeName, walletId);
         return ResponseEntity.ok(ApiResponse.success("VALIDATION KEYS UPDATED SUCCESSFULLY", null));
     }
 
-    @PatchMapping("/{walletId}/exchange/{exchangeName}/validate")
+    @PostMapping("/{walletId}/exchange/{exchangeName}/validate")
     public ResponseEntity<ApiResponse<String>> validateKeys(@PathVariable("walletId") String walletId,
                                                             @PathVariable("exchangeName") String exchangeName) throws Exception {
-        logger.info("PATCH:: UPDATE KEY VALIDATIONS");
+        logger.info("POST:: UPDATE KEY VALIDATIONS");
         walletService.validateKeys( exchangeName, walletId);
         return ResponseEntity.ok(ApiResponse.success("VALIDATION KEYS UPDATED SUCCESSFULLY", null));
     }
-
 
 }

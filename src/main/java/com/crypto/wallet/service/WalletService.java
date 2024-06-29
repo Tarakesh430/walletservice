@@ -2,6 +2,7 @@ package com.crypto.wallet.service;
 
 import com.crypto.wallet.dto.WalletExchangeMapDto;
 import com.crypto.wallet.entity.*;
+import com.crypto.wallet.helper.ExchangeHelper;
 import com.crypto.wallet.helper.WalletHelper;
 import com.crypto.wallet.handler.KeyValidationHandler;
 import com.crypto.wallet.mapper.WalletExchangeMapper;
@@ -20,19 +21,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class WalletService {
     private final Logger logger = LoggerFactory.getLogger(WalletService.class);
-    private final ExchangeRepository exchangeRepository;
     private final WalletRepository walletRepository;
     private final WalletExchangeMapRepository walletExchangeRepository;
     private final WalletExchangeMapper walletExchangeMapper;
     private final WalletHelper walletHelper;
     private final ValidationKeyRepository validationKeyRepository;
     private final KeyValidationHandler keyValidationHandler;
+    private final ExchangeHelper exchangeHelper;
 
     @Transactional(value = Transactional.TxType.REQUIRED)
     public WalletExchangeMapDto addExchangeToWallet(String exchangeName, String walletId) throws Exception {
         logger.info("Adding Exchange {} to wallet {}", exchangeName, walletId);
-        Exchange exchange = exchangeRepository.findByExchangeName(exchangeName)
-                .orElseThrow(() -> new Exception("Exchange not Active or not found.Pls try another"));
+        Exchange exchange = exchangeHelper.getActiveExchange(exchangeName);
         Wallet wallet = walletRepository.findByWalletId(walletId).orElseThrow(() -> new Exception("Wallet not Found"));
 
         WalletExchangeMap walletExchangeMap = walletHelper.getWalletExchangeMap(exchange, wallet);
@@ -40,12 +40,12 @@ public class WalletService {
         return walletExchangeMapper.toDto(walletExchangeMap);
     }
 
+
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public void updateValidationKeys(ValidationKeyRequest request, String exchange, String walletId) throws Exception {
+    public void updateValidationKeys(ValidationKeyRequest request, String exchangeName, String walletId) throws Exception {
         logger.info("Updating the Key Validation Object");
         logger.info("Get Exchange Details");
-        Exchange exchangeDetails = exchangeRepository.findByExchangeName(exchange)
-                .orElseThrow(() -> new Exception("Invalid Exchange Name provided"));
+        Exchange exchangeDetails = exchangeHelper.getActiveExchange(exchangeName);
         logger.info("Exchange Details Present");
         WalletExchangeMap walletExchangeMap = walletHelper.getWalletExchangeMap(walletId, exchangeDetails.getExchangeId());
         ValidationKey finalKey = walletExchangeMap.getValidationKey();
@@ -58,14 +58,20 @@ public class WalletService {
     }
 
 
+    @Transactional
     public void validateKeys(String exchangeName, String walletId) throws Exception {
         logger.info("Validate Keys");
-        Exchange exchangeDetails = exchangeRepository.findByExchangeName(exchangeName)
-                .orElseThrow(() -> new Exception("Invalid Exchange Name provided"));
+        Exchange exchangeDetails = exchangeHelper.getActiveExchange(exchangeName);
         logger.info("Exchange Details Present");
         WalletExchangeMap walletExchangeMap = walletHelper.getWalletExchangeMap(walletId, exchangeDetails.getExchangeId());
         ValidationKey finalKey = walletExchangeMap.getValidationKey();
-        keyValidationHandler.validateKey(exchangeName, finalKey);
-
+        boolean keyValidationStatus = keyValidationHandler.validateKey(exchangeName, finalKey);
+        if (keyValidationStatus) {
+            logger.info("Key Validation Failed for the Exchange {} Wallet Id{}", exchangeName, walletId);
+            throw new Exception("Key Validation Failed ");
+        }
+        finalKey.setValid(keyValidationStatus);
+        validationKeyRepository.save(finalKey);
     }
+
 }

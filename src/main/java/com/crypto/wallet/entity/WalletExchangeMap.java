@@ -1,9 +1,12 @@
 package com.crypto.wallet.entity;
 
+import com.crypto.wallet.entity.order.Order;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name = "wallet_exchange_map")
@@ -35,4 +38,7 @@ public class WalletExchangeMap {
     @MapsId("exchangeId")
     @JoinColumn(name = "exchange_id")
     Exchange exchange;
+
+    @OneToMany(mappedBy = "walletExchangeMap", cascade = CascadeType.ALL)
+    private List<Order> orders;
 }

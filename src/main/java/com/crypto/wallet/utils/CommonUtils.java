@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -17,6 +18,10 @@ public class CommonUtils {
             logger.info("Exception Occurred in Resolver {}",ex.getMessage());
         }
         return Optional.empty();
+    }
+
+    public long getEpochTimeStamp(){
+        return Instant.now().toEpochMilli();
     }
 }
 

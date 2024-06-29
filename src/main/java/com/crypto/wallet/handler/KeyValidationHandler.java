@@ -26,7 +26,7 @@ public class KeyValidationHandler {
     @Value("${cryptotrade.trade.api.baseUrl}")
     private String baseUrl;
 
-    public boolean validateKey(String exchangeName, ValidationKey validationKey) {
+    public boolean validateKey(String exchangeName, ValidationKey validationKey) throws Exception {
         logger.info("CoinswitchX EXchange Key Validation being triggered");
         boolean validationStatus = false;
         ResponseEntity<ApiResponse<String>> response = null;
@@ -38,6 +38,7 @@ public class KeyValidationHandler {
                     });
         } catch (Exception ex) {
             logger.info("Exception ex {} in Validating Keys", ex.getMessage());
+            throw new Exception("Key Validation Failed");
         }
         if (Objects.nonNull(response) && response.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Validated the Validation Keys with response");
