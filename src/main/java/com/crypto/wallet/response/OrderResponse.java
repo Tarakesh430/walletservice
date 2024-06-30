@@ -1,7 +1,7 @@
 package com.crypto.wallet.response;
 
+import com.common.library.enums.TradeType;
 import com.crypto.wallet.enums.OrderStatus;
-import com.crypto.wallet.enums.TradeType;
 import lombok.Data;
 
 import java.io.Serializable;

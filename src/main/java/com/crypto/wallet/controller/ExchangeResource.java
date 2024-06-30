@@ -1,8 +1,7 @@
 package com.crypto.wallet.controller;
 
+import com.common.library.response.ApiResponse;
 import com.crypto.wallet.dto.ExchangeDto;
-import com.crypto.wallet.entity.Exchange;
-import com.crypto.wallet.response.ApiResponse;
 import com.crypto.wallet.service.ExchangeService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

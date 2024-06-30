@@ -9,4 +9,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface ValidationKeyMapper {
     ValidationKey toEntity(ValidationKeyDto validationDto);
+    ValidationKeyDto toDto(ValidationKey validationKey);
 }

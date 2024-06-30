@@ -1,11 +1,10 @@
 package com.crypto.wallet.scheduler;
 
+import com.common.library.events.OrderEvent;
 import com.crypto.wallet.entity.order.Order;
 import com.crypto.wallet.enums.OrderStatus;
 import com.crypto.wallet.kafka.KafkaProducer;
-import com.crypto.wallet.kafka.event.OrderEvent;
 import com.crypto.wallet.repository.OrderRepository;
-import com.crypto.wallet.utils.CommonUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -49,7 +48,7 @@ public class OrderPublisher {
         orderEvent.setQuantity(order.getQuantity());
         orderEvent.setStockName(order.getStockName());
         orderEvent.setExchangeName(order.getWalletExchangeMap().getExchange().getExchangeName());
-        orderEvent.setTradeType(order.getTradeType());
+        orderEvent.setTradeType(order.getTradeType().getValue());
         orderEvent.setRecurring(order.isRecurring());
         orderEvent.setWalletId(order.getWalletExchangeMap().getWallet().getWalletId());
         orderEvent.setOrderId(order.getOrderId());

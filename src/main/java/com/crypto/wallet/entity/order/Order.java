@@ -1,17 +1,13 @@
 package com.crypto.wallet.entity.order;
 
 
+import com.common.library.enums.TradeType;
 import com.crypto.wallet.entity.WalletExchangeMap;
 import com.crypto.wallet.enums.OrderStatus;
-import com.crypto.wallet.enums.TradeType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity(name = "orders")
 @Table(name = "orders")

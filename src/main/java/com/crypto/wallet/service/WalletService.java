@@ -1,12 +1,13 @@
 package com.crypto.wallet.service;
 
+import com.crypto.wallet.dto.ValidationKeyDto;
 import com.crypto.wallet.dto.WalletExchangeMapDto;
 import com.crypto.wallet.entity.*;
 import com.crypto.wallet.helper.ExchangeHelper;
 import com.crypto.wallet.helper.WalletHelper;
 import com.crypto.wallet.handler.KeyValidationHandler;
+import com.crypto.wallet.mapper.ValidationKeyMapper;
 import com.crypto.wallet.mapper.WalletExchangeMapper;
-import com.crypto.wallet.repository.ExchangeRepository;
 import com.crypto.wallet.repository.ValidationKeyRepository;
 import com.crypto.wallet.repository.WalletExchangeMapRepository;
 import com.crypto.wallet.repository.WalletRepository;
@@ -28,6 +29,7 @@ public class WalletService {
     private final ValidationKeyRepository validationKeyRepository;
     private final KeyValidationHandler keyValidationHandler;
     private final ExchangeHelper exchangeHelper;
+    private final ValidationKeyMapper validationKeyMapper;
 
     @Transactional(value = Transactional.TxType.REQUIRED)
     public WalletExchangeMapDto addExchangeToWallet(String exchangeName, String walletId) throws Exception {
@@ -72,6 +74,14 @@ public class WalletService {
         }
         finalKey.setValid(keyValidationStatus);
         validationKeyRepository.save(finalKey);
+    }
+
+    public ValidationKeyDto getValidationKeys(String exchangeName, String walletId) throws Exception {
+        logger.info("Get Validate Keys");
+        Exchange exchangeDetails = exchangeHelper.getActiveExchange(exchangeName);
+        WalletExchangeMap walletExchangeMap = walletHelper.getWalletExchangeMap(walletId, exchangeDetails.getExchangeId());
+        ValidationKey validationKey = walletExchangeMap.getValidationKey();
+        return validationKeyMapper.toDto(validationKey);
     }
 
 }

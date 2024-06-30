@@ -1,10 +1,10 @@
 package com.crypto.wallet.controller;
 
 
+import com.common.library.response.ApiResponse;
 import com.crypto.wallet.dto.ValidationKeyDto;
 import com.crypto.wallet.dto.WalletExchangeMapDto;
 import com.crypto.wallet.request.ValidationKeyRequest;
-import com.crypto.wallet.response.ApiResponse;
 import com.crypto.wallet.service.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -47,6 +47,14 @@ public class WalletResource {
         logger.info("POST:: UPDATE KEY VALIDATIONS");
         walletService.validateKeys( exchangeName, walletId);
         return ResponseEntity.ok(ApiResponse.success("VALIDATION KEYS UPDATED SUCCESSFULLY", null));
+    }
+
+    @GetMapping("/{walletId}/exchange/{exchangeName}/keys")
+    public ResponseEntity<ApiResponse<ValidationKeyDto>> getValidationKeys(@PathVariable("walletId") String walletId,
+                                                                           @PathVariable("exchangeName") String exchangeName) throws Exception {
+        logger.info("GET:: VALIDATION KEYS");
+        ValidationKeyDto validationKeys = walletService.getValidationKeys(exchangeName, walletId);
+        return ResponseEntity.ok(ApiResponse.success("VALIDATION KEYS UPDATED SUCCESSFULLY", validationKeys));
     }
 
 }

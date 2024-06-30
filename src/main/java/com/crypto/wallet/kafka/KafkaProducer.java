@@ -1,6 +1,7 @@
 package com.crypto.wallet.kafka;
 
-import com.crypto.wallet.kafka.event.OrderEvent;
+
+import com.common.library.events.OrderEvent;
 import com.crypto.wallet.kafka.postprocess.BasePostProcess;
 import com.crypto.wallet.kafka.postprocess.EventPostProcessHandlerFactory;
 import lombok.RequiredArgsConstructor;

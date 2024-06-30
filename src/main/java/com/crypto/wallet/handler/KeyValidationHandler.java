@@ -1,7 +1,7 @@
 package com.crypto.wallet.handler;
 
+import com.common.library.response.ApiResponse;
 import com.crypto.wallet.entity.ValidationKey;
-import com.crypto.wallet.response.ApiResponse;
 import com.crypto.wallet.utils.CommonConstants;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class KeyValidationHandler {
     private String baseUrl;
 
     public boolean validateKey(String exchangeName, ValidationKey validationKey) throws Exception {
-        logger.info("CoinswitchX EXchange Key Validation being triggered");
+        logger.info("EXchange Key Validation being triggered");
         boolean validationStatus = false;
         ResponseEntity<ApiResponse<String>> response = null;
         try {

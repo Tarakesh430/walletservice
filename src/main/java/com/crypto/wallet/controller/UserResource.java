@@ -1,7 +1,7 @@
 package com.crypto.wallet.controller;
 
+import com.common.library.response.ApiResponse;
 import com.crypto.wallet.request.CreateUserRequest;
-import com.crypto.wallet.response.ApiResponse;
 import com.crypto.wallet.response.UserDetails;
 import com.crypto.wallet.service.UserService;
 import jakarta.validation.Valid;
