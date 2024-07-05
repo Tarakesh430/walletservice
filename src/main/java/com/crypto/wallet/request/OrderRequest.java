@@ -22,5 +22,9 @@ public class OrderRequest implements Serializable {
     private String stockName;
     private double quantity;
     private double price;
+    private double executedPrice;
+    private double executedQuantity;
     private boolean isRecurring = false;
+    private String fromStatus;
+    private String toStatus;
 }

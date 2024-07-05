@@ -28,6 +28,8 @@ public class Order {
     private double quantity;
     private double price;
     private boolean isRecurring = false;
+    private double executedPrice;
+    private double executedQuantity;
     @Column(name = "create_time", nullable = false)
     private long createTime;
     @Column(name = "update_time", nullable = false)

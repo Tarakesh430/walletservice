@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order,String> {
@@ -19,6 +20,6 @@ public interface OrderRepository extends JpaRepository<Order,String> {
     @Modifying
     @Transactional
     @Query("UPDATE orders o SET o.orderStatus = :toStatus WHERE o.orderId = :orderId and o.orderStatus = :fromStatus")
-    void updateOrderStatus(@Param("fromStatus") OrderStatus fromStatus,
-                           @Param("toStatus")OrderStatus toStatus, @Param("orderId") String orderId);
+    Optional<Order> updateOrderStatus(@Param("fromStatus") OrderStatus fromStatus,
+                                      @Param("toStatus")OrderStatus toStatus, @Param("orderId") String orderId);
 }

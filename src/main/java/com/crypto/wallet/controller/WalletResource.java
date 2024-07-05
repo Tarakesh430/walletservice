@@ -2,6 +2,7 @@ package com.crypto.wallet.controller;
 
 
 import com.common.library.response.ApiResponse;
+import com.crypto.wallet.dto.ExchangeDto;
 import com.crypto.wallet.dto.ValidationKeyDto;
 import com.crypto.wallet.dto.WalletExchangeMapDto;
 import com.crypto.wallet.request.ValidationKeyRequest;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -57,4 +60,13 @@ public class WalletResource {
         return ResponseEntity.ok(ApiResponse.success("VALIDATION KEYS UPDATED SUCCESSFULLY", validationKeys));
     }
 
+    @GetMapping("/{walletId}/exchanges")
+    public ResponseEntity<ApiResponse<List<ExchangeDto>>> getOnboardedExchangesForWallet(
+            @PathVariable("walletId") String walletId) throws Exception {
+        logger.info("GET::EXCHANGES ONBOARDED FOR WALLET");
+        List<ExchangeDto> onboardedExchanges = walletService.getOnboardedExchanges(walletId);
+        return ResponseEntity.ok(ApiResponse.success("Successfully Retrieved Onboarded Exchanges",
+                onboardedExchanges));
+
+    }
 }

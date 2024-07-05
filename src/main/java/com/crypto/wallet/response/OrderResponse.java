@@ -12,6 +12,8 @@ public class OrderResponse implements Serializable {
     private String orderId;
     private TradeType tradeType;
     private String stockName;
+    private String walletId;
+    private String exchangeName;
     private OrderStatus orderStatus;
     private double quantity;
     private double price;

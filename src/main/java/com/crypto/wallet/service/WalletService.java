@@ -1,11 +1,13 @@
 package com.crypto.wallet.service;
 
+import com.crypto.wallet.dto.ExchangeDto;
 import com.crypto.wallet.dto.ValidationKeyDto;
 import com.crypto.wallet.dto.WalletExchangeMapDto;
 import com.crypto.wallet.entity.*;
 import com.crypto.wallet.helper.ExchangeHelper;
 import com.crypto.wallet.helper.WalletHelper;
 import com.crypto.wallet.handler.KeyValidationHandler;
+import com.crypto.wallet.mapper.ExchangeMapper;
 import com.crypto.wallet.mapper.ValidationKeyMapper;
 import com.crypto.wallet.mapper.WalletExchangeMapper;
 import com.crypto.wallet.repository.ValidationKeyRepository;
@@ -17,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +34,7 @@ public class WalletService {
     private final KeyValidationHandler keyValidationHandler;
     private final ExchangeHelper exchangeHelper;
     private final ValidationKeyMapper validationKeyMapper;
+    private final ExchangeMapper exchangeMapper ;
 
     @Transactional(value = Transactional.TxType.REQUIRED)
     public WalletExchangeMapDto addExchangeToWallet(String exchangeName, String walletId) throws Exception {
@@ -84,4 +89,15 @@ public class WalletService {
         return validationKeyMapper.toDto(validationKey);
     }
 
+    public List<ExchangeDto> getOnboardedExchanges(String walletId) throws Exception {
+        logger.info("Get Onboarded Exchanges for walletId {}",walletId);
+        List<WalletExchangeMap> walletExchanges =
+                walletExchangeRepository.findByWalletIdAndIsOnboarded(walletId);
+        List<String> exchangeIds = walletExchanges.stream().map(walletExchange -> walletExchange.getKey().getExchangeId())
+                .distinct().toList();
+        List<Exchange> exchanges = exchangeHelper.getActiveExchangesFromIds(exchangeIds);
+        logger.info("Onboarded Exchanges for walletId {}",exchanges);
+        return exchanges.stream().map(exchangeMapper::toDto).toList();
+
+    }
 }

@@ -9,7 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Set;
 
-@Entity
+@Entity(name="exchange")
 @Table(name = "exchange")
 @Data
 @NoArgsConstructor
