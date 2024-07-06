@@ -91,7 +91,7 @@ public class OrderService {
         Order oldOrder = orderRepository.findById(globalOrderId)
                 .orElseThrow(() -> new Exception("No Order Details Found"));
         JsonNode oldOrderNode = objectMapper.convertValue(oldOrder, JsonNode.class);
-        JsonNode patchedOrderNode = applyJsonPatches(jsonPatches, oldOrderNode);
+        JsonNode patchedOrderNode = CommonUtils.applyJsonPatches(jsonPatches, oldOrderNode);
         Order patchedOrder = objectMapper.treeToValue(patchedOrderNode, Order.class);
         validateOrderUpdate(oldOrder,patchedOrder);
         //Update the older order with the patched data
@@ -118,13 +118,5 @@ public class OrderService {
         if(!oldOrder.getOrderId().equals(patchedOrder.getOrderId())){
             throw new Exception("Order Id update not allowed");
         }
-    }
-
-
-    private JsonNode applyJsonPatches(List<JsonPatch> jsonPatches, JsonNode jsonNode) throws JsonPatchException {
-        for (JsonPatch jsonPatch : jsonPatches) {
-            jsonNode = jsonPatch.apply(jsonNode);
-        }
-        return jsonNode;
     }
 }

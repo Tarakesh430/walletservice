@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity(name = "orders")
 @Table(name = "orders")
 @Data
@@ -18,6 +20,13 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String orderId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_order_tuid")
+    private Order parentOrder;
+    @OneToMany(mappedBy = "parentOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> childOrders;
+
     @Column(name = "trade_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private TradeType tradeType;

@@ -54,4 +54,5 @@ public class OrderPublisher {
         orderEvent.setOrderId(order.getOrderId());
         return orderEvent;
     }
+
 }

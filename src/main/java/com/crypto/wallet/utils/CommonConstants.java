@@ -7,4 +7,5 @@ public class CommonConstants {
     public static final String API_KEY_HEADER = "X-API-KEY";
     public static final String EVENT_SOURCE = "WALLET_SERVICE";
     public static final String PROCESS_ORDER_EVENT = "PROCESS_ORDER";
+    public static final int DEFAULT_MAX_RETRIES = 3;
 }
