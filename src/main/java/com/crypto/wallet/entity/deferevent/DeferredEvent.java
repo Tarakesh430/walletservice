@@ -1,6 +1,7 @@
 package com.crypto.wallet.entity.deferevent;
 
-import com.crypto.wallet.enums.EventStatus;
+import com.crypto.wallet.enums.deferredevent.EventStatus;
+import com.crypto.wallet.enums.deferredevent.EventType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,9 @@ public class DeferredEvent {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "event_tuid", unique = true, nullable = false)
     private String eventTuid;
-    private String eventType;
+    @Column(name = "event_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EventType eventType;
     @Column(name = "event_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private EventStatus eventStatus;

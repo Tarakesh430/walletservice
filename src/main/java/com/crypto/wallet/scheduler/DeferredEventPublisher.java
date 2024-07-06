@@ -2,7 +2,7 @@ package com.crypto.wallet.scheduler;
 
 import com.common.library.utils.CommonUtils;
 import com.crypto.wallet.entity.deferevent.DeferredEvent;
-import com.crypto.wallet.enums.EventStatus;
+import com.crypto.wallet.enums.deferredevent.EventStatus;
 import com.crypto.wallet.repository.DeferredEventRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

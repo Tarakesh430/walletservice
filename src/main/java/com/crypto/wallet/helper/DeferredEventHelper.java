@@ -2,7 +2,8 @@ package com.crypto.wallet.helper;
 
 import com.common.library.utils.CommonUtils;
 import com.crypto.wallet.entity.deferevent.DeferredEvent;
-import com.crypto.wallet.enums.EventStatus;
+import com.crypto.wallet.enums.deferredevent.EventStatus;
+import com.crypto.wallet.enums.deferredevent.EventType;
 import com.crypto.wallet.request.DeferredEventRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ public class DeferredEventHelper {
         DeferredEvent deferredEvent = new DeferredEvent();
         deferredEvent.setEventStatus(EventStatus.CREATED);
         deferredEvent.setEventSource(request.getEventSource());
-        deferredEvent.setEventType(request.getEventType());
+        deferredEvent.setEventType(EventType.fromString(request.getEventType()));
         deferredEvent.setCreatedTime(CommonUtils.getEpochTimeStamp());
         deferredEvent.setUpdatedTime(CommonUtils.getEpochTimeStamp());
         deferredEvent.setPayload(request.getPayload());

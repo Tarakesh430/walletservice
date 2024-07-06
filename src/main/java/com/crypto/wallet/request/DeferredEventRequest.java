@@ -1,6 +1,6 @@
 package com.crypto.wallet.request;
 
-import com.crypto.wallet.enums.EventStatus;
+import com.crypto.wallet.enums.deferredevent.EventStatus;
 import com.crypto.wallet.utils.CommonConstants;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

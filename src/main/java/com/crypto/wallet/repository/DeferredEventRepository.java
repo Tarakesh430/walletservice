@@ -1,7 +1,7 @@
 package com.crypto.wallet.repository;
 
 import com.crypto.wallet.entity.deferevent.DeferredEvent;
-import com.crypto.wallet.enums.EventStatus;
+import com.crypto.wallet.enums.deferredevent.EventStatus;
 import jakarta.websocket.server.PathParam;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

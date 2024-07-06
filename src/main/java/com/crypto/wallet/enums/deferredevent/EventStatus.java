@@ -1,4 +1,4 @@
-package com.crypto.wallet.enums;
+package com.crypto.wallet.enums.deferredevent;
 
 import lombok.Getter;
 
