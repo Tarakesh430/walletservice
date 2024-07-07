@@ -27,4 +27,5 @@ public class OrderResponse implements Serializable {
     private double executedQuantity;
     private long createTime;
     private long updateTime;
+    private long intervalScheduledMillis;
 }

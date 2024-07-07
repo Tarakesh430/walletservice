@@ -33,6 +33,7 @@ public class OrderHelper {
         newOrder.setWalletExchangeMap(walletExchangeMap);
         newOrder.setCreateTime(CommonUtils.getEpochTimeStamp());
         newOrder.setUpdateTime(CommonUtils.getEpochTimeStamp());
+        newOrder.setIntervalScheduledMillis(orderRequest.getIntervalScheduledMillis());
         return newOrder;
     }
 

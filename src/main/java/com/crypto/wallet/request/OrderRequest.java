@@ -28,4 +28,5 @@ public class OrderRequest implements Serializable {
     private String fromStatus;
     private String toStatus;
     private String orderGroupId;
+    private long intervalScheduledMillis;
 }

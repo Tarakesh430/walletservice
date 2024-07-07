@@ -31,6 +31,7 @@ public class Order {
     private double quantity;
     private double price;
     private boolean isRecurring = false;
+    private long intervalScheduledMillis;
     private double executedPrice;
     private double executedQuantity;
     @Column(name = "create_time", nullable = false)

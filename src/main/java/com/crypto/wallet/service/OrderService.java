@@ -116,6 +116,7 @@ public class OrderService {
         oldOrder.setExecutedPrice(patchedOrder.getExecutedPrice());
         oldOrder.setExecutedQuantity(patchedOrder.getExecutedQuantity());
         oldOrder.setUpdateTime(CommonUtils.getEpochTimeStamp());
+        oldOrder.setIntervalScheduledMillis(patchedOrder.getIntervalScheduledMillis());
         //Save the updated Order data
         Order savedOrder = orderRepository.save(oldOrder);
         return prepareOrderResponse(savedOrder, savedOrder.getOrderGroup());
