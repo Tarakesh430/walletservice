@@ -52,6 +52,7 @@ public class OrderPublisher {
         orderEvent.setRecurring(order.isRecurring());
         orderEvent.setWalletId(order.getWalletExchangeMap().getWallet().getWalletId());
         orderEvent.setOrderId(order.getOrderId());
+        orderEvent.setOrderGroupId(order.getOrderGroup().getOrderGroupTuid());
         return orderEvent;
     }
 

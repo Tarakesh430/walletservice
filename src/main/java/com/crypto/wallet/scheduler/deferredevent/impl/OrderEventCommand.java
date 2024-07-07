@@ -29,7 +29,8 @@ public class OrderEventCommand implements DeferredEventCommand {
     public void execute(DeferredEvent deferredEvent) throws Exception {
         OrderEvent orderEvent = objectMapper.readValue(deferredEvent.getPayload(), OrderEvent.class);
         OrderRequest orderRequest = prepareOrderRequest(orderEvent);
-        orderService.placeOrder(orderRequest);
+        OrderResponse orderResponse = orderService.placeOrder(orderRequest);
+        logger.info("Successfully Placed order {}",orderResponse);
     }
 
     private OrderRequest prepareOrderRequest(OrderEvent orderEvent) {
@@ -41,6 +42,7 @@ public class OrderEventCommand implements DeferredEventCommand {
         orderRequest.setRecurring(orderRequest.isRecurring());
         orderRequest.setStockName(orderRequest.getStockName());
         orderRequest.setTradeType(orderRequest.getTradeType());
+        orderRequest.setOrderGroupId(orderRequest.getOrderGroupId());
         return orderRequest;
     }
 }

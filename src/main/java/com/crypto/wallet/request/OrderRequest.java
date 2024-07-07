@@ -27,4 +27,5 @@ public class OrderRequest implements Serializable {
     private boolean isRecurring = false;
     private String fromStatus;
     private String toStatus;
+    private String orderGroupId;
 }

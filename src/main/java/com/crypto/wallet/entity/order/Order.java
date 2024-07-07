@@ -21,12 +21,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String orderId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_order_tuid")
-    private Order parentOrder;
-    @OneToMany(mappedBy = "parentOrder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> childOrders;
-
     @Column(name = "trade_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private TradeType tradeType;
@@ -49,4 +43,9 @@ public class Order {
             @JoinColumn(name = "exchange_id", referencedColumnName = "exchange_id")
     })
     private WalletExchangeMap walletExchangeMap;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_group_tuid")
+    private OrderGroup orderGroup;
+
 }

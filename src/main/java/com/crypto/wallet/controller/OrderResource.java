@@ -46,4 +46,20 @@ public class OrderResource {
 
     }
 
+    @DeleteMapping("/order-group/{order-group-id}")
+    public ResponseEntity<ApiResponse<String>> deactiveOrderGroup(@PathVariable("order-group-id")String orderGroupId) throws Exception {
+        logger.info("DELETE :: DEACTIVATE ORDER GROUP :: DEACTIVATE");
+        orderService.deactivateOrderGroupId(orderGroupId);
+        return ResponseEntity.ok(ApiResponse.success("Order Group Id deactivated successfully",null));
+    }
+
+    @GetMapping("/order-group/{order-group-id}/getOrders")
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getOrdersForOrderGroup(@PathVariable("order-group-id")String orderGroupId) throws Exception {
+        logger.info("GET :: ORDER FOR ORDER GROUP :: ORDER DETAILS");
+
+        return ResponseEntity.ok(ApiResponse.success("Order Details Retrieved Successfully",
+                orderService.getOrderDetailsForOrderGroupId(orderGroupId)));
+    }
+
+
 }

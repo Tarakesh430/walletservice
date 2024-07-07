@@ -4,11 +4,13 @@ import com.common.library.utils.CommonUtils;
 import com.crypto.wallet.entity.Exchange;
 import com.crypto.wallet.entity.WalletExchangeMap;
 import com.crypto.wallet.entity.order.Order;
+import com.crypto.wallet.entity.order.OrderGroup;
 import com.crypto.wallet.enums.OrderStatus;
 import com.crypto.wallet.helper.ExchangeHelper;
 import com.crypto.wallet.helper.OrderHelper;
 import com.crypto.wallet.helper.WalletHelper;
 import com.crypto.wallet.mapper.OrderMapper;
+import com.crypto.wallet.repository.OrderGroupRepository;
 import com.crypto.wallet.repository.OrderRepository;
 import com.crypto.wallet.repository.WalletExchangeMapRepository;
 import com.crypto.wallet.request.OrderRequest;
@@ -16,7 +18,6 @@ import com.crypto.wallet.response.OrderResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 
 @Service
@@ -37,6 +39,8 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final WalletExchangeMapRepository walletExchangeMapRepository;
     private final ObjectMapper objectMapper;
+    private final OrderGroupRepository orderGroupRepository;
+
 
 
     @Transactional
@@ -49,29 +53,39 @@ public class OrderService {
         if (!walletExchangeMap.isOnboarded()) {
             throw new Exception("Exchange not onboarded to the Wallet");
         }
+        OrderGroup orderGroup = orderHelper.getOrCreateNewOrderGroup(orderRequest.getOrderGroupId());
+        if(!orderGroup.isActive()){
+            throw new Exception("Order Group not active further transactions not allowed in this group");
+        }
         Order order = orderHelper.createOrder(orderRequest, walletExchangeMap);
+        order.setOrderGroup(orderGroup);
         order = orderRepository.save(order);
-
         return orderMapper.toResponse(order);
     }
 
+    @Transactional
     public OrderResponse getOrderDetails(String globalOrderId) throws Exception {
         logger.info("Get Order Details for Order Id");
         Order order = orderRepository.findById(globalOrderId)
                 .orElseThrow(() -> new Exception("Invalid Order Id"));
-       return  prepareOrderResponse(order);
+        OrderGroup orderGroup = order.getOrderGroup();
+        return  prepareOrderResponse(order,orderGroup);
     }
 
-    private OrderResponse prepareOrderResponse(Order order) throws Exception {
+    private OrderResponse prepareOrderResponse(Order order, OrderGroup orderGroup) throws Exception {
         OrderResponse orderResponse =orderMapper.toResponse(order);
         WalletExchangeMap walletExchangeMap = walletExchangeMapRepository
                 .findWalletExchangeMapByOrderId(order.getOrderId())
-                .orElseThrow(() -> new Exception("Error in getting wallet Exchange Map Details"));
-        String exchangeName = exchangeHelper
-                .getActiveExchangeByExchangeId(walletExchangeMap.getKey().getExchangeId()).getExchangeName();
-        String walletId = walletExchangeMap.getKey().getWalletId();
-        orderResponse.setWalletId(walletId);
-        orderResponse.setExchangeName(exchangeName);
+                .orElse(null);
+        if(Objects.nonNull(walletExchangeMap)){
+            String exchangeName = exchangeHelper
+                    .getActiveExchangeByExchangeId(walletExchangeMap.getKey().getExchangeId()).getExchangeName();
+            String walletId = walletExchangeMap.getKey().getWalletId();
+            orderResponse.setWalletId(walletId);
+            orderResponse.setExchangeName(exchangeName);
+        }
+        orderResponse.setOrderGroupId(orderGroup.getOrderGroupTuid());
+        orderResponse.setOrderGroupActive(orderGroup.isActive());
         return orderResponse;
     }
 
@@ -104,7 +118,7 @@ public class OrderService {
         oldOrder.setUpdateTime(CommonUtils.getEpochTimeStamp());
         //Save the updated Order data
         Order savedOrder = orderRepository.save(oldOrder);
-        return prepareOrderResponse(savedOrder);
+        return prepareOrderResponse(savedOrder, savedOrder.getOrderGroup());
     }
 
     private void validateOrderUpdate(Order oldOrder, Order patchedOrder) throws Exception {
@@ -118,5 +132,27 @@ public class OrderService {
         if(!oldOrder.getOrderId().equals(patchedOrder.getOrderId())){
             throw new Exception("Order Id update not allowed");
         }
+    }
+
+    @Transactional
+    public void deactivateOrderGroupId(String orderGroupId) throws Exception {
+        logger.info("Deactivating the Order Group Id");
+        OrderGroup orderGroup = orderGroupRepository.findById(orderGroupId).orElseThrow(() -> new Exception("Order Group Info Not found"));
+        orderGroup.setActive(false);
+        orderGroup.setUpdateTime(CommonUtils.getEpochTimeStamp());
+        orderGroupRepository.save(orderGroup);
+    }
+
+
+    public List<OrderResponse> getOrderDetailsForOrderGroupId(String orderGroupId) throws Exception {
+        logger.info(" Get Order Details for the Order Group Id");
+        OrderGroup orderGroup = orderGroupRepository.findById(orderGroupId).orElseThrow(() -> new Exception("Order Group Info Not found"));
+        List<Order> orders = orderGroup.getOrders();
+        List<OrderResponse> orderResponseList = new ArrayList<>();
+        for (Order order : orders) {
+            orderResponseList.add(prepareOrderResponse(order,orderGroup));
+        }
+        orderResponseList.sort(Comparator.comparingLong(OrderResponse::getCreateTime));
+        return orderResponseList;
     }
 }

@@ -25,7 +25,7 @@ public class DeferredEventCommandInvoker {
         }
     }
 
-    public void execute(DeferredEvent event) throws JsonProcessingException {
+    public void execute(DeferredEvent event) throws Exception {
         DeferredEventCommand command = commandMap.get(event.getEventType());
         if (command != null) {
             command.execute(event);

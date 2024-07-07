@@ -9,7 +9,8 @@ import java.util.Objects;
 public enum EventStatus {
     CREATED("CREATED"),
     INPROGRESS("INPROGRESS"),
-    PROCESSED("PROCESSED");
+    PROCESSED("PROCESSED"),
+    FAILED("FAILED");
 
     private final String value;
 
