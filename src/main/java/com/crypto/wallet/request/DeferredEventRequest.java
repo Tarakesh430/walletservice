@@ -9,7 +9,6 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeferredEventRequest {
     private String eventType;
-    private EventStatus eventStatus;
     private String eventSource;
     private String  payload;
     private int maxRetrycount= CommonConstants.DEFAULT_MAX_RETRIES;

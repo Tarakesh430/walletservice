@@ -1,9 +1,12 @@
 package com.crypto.wallet.service;
 
+import com.common.library.response.cryptotradeapi.PortFolioResponse;
+import com.common.library.response.wallet.WalletPortFolioResponse;
 import com.crypto.wallet.dto.ExchangeDto;
 import com.crypto.wallet.dto.ValidationKeyDto;
 import com.crypto.wallet.dto.WalletExchangeMapDto;
 import com.crypto.wallet.entity.*;
+import com.crypto.wallet.handler.PortFolioHandler;
 import com.crypto.wallet.helper.ExchangeHelper;
 import com.crypto.wallet.helper.WalletHelper;
 import com.crypto.wallet.handler.KeyValidationHandler;
@@ -35,6 +38,7 @@ public class WalletService {
     private final ExchangeHelper exchangeHelper;
     private final ValidationKeyMapper validationKeyMapper;
     private final ExchangeMapper exchangeMapper ;
+    private final PortFolioHandler portFolioHandler;
 
     @Transactional(value = Transactional.TxType.REQUIRED)
     public WalletExchangeMapDto addExchangeToWallet(String exchangeName, String walletId) throws Exception {
@@ -92,7 +96,7 @@ public class WalletService {
     public List<ExchangeDto> getOnboardedExchanges(String walletId) throws Exception {
         logger.info("Get Onboarded Exchanges for walletId {}",walletId);
         List<WalletExchangeMap> walletExchanges =
-                walletExchangeRepository.findByWalletIdAndIsOnboarded(walletId);
+                walletExchangeRepository.findByWalletIdAndIsOnboarded(walletId,true);
         List<String> exchangeIds = walletExchanges.stream().map(walletExchange -> walletExchange.getKey().getExchangeId())
                 .distinct().toList();
         List<Exchange> exchanges = exchangeHelper.getActiveExchangesFromIds(exchangeIds);
@@ -100,4 +104,23 @@ public class WalletService {
         return exchanges.stream().map(exchangeMapper::toDto).toList();
 
     }
+
+    public List<WalletPortFolioResponse> getPortFolioDetails(String walletId) throws Exception {
+        logger.info("Getting Port Folio Details for the Wallet Id {}",walletId);
+        Wallet wallet = walletRepository.findByWalletId(walletId).orElseThrow(() -> new Exception("Wallet not Found"));
+        List<WalletExchangeMap> walletExchanges =
+                walletExchangeRepository.findByWalletIdAndIsOnboarded(walletId,true);
+        List<WalletPortFolioResponse> walletPortFolioResponse = walletExchanges.stream().map(walletExchangeMap -> {
+            try {
+                List<PortFolioResponse> portFolioResponseList =
+                        portFolioHandler.process(walletExchangeMap.getValidationKey(),
+                                walletExchangeMap.getKey().getExchangeId());
+                return new WalletPortFolioResponse(walletExchangeMap.getExchange().getExchangeName(), portFolioResponseList);
+            } catch (Exception e) {
+                throw new RuntimeException("Exception in Populating the Portfolio response", e);
+            }
+        }).toList();
+      return walletPortFolioResponse;
+    }
+
 }

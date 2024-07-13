@@ -20,7 +20,7 @@ public class WalletExchangeMap {
     @Column(name = "is_onboarded", nullable = false)
     private boolean isOnboarded;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "validation_id", referencedColumnName = "validation_key_uuid")
     public ValidationKey validationKey;
 
@@ -29,16 +29,16 @@ public class WalletExchangeMap {
     @Column(name = "update_time", nullable = false)
     private long updateTime;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     @MapsId("walletId")
     @JoinColumn(name = "wallet_id")
     Wallet wallet;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("exchangeId")
     @JoinColumn(name = "exchange_id")
     Exchange exchange;
 
-    @OneToMany(mappedBy = "walletExchangeMap", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "walletExchangeMap", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Order> orders;
 }

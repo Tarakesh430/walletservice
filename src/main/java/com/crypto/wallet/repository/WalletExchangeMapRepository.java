@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface WalletExchangeMapRepository extends JpaRepository<WalletExchangeMap, WalletExchangeKey> {
 
     @Query("SELECT wem FROM WalletExchangeMap wem WHERE wem.wallet.walletId = :walletId AND wem.isOnboarded = :isOnboarded")
-    List<WalletExchangeMap> findByWalletIdAndIsOnboarded(@Param("walletId") String walletId);
+    List<WalletExchangeMap> findByWalletIdAndIsOnboarded(@Param("walletId") String walletId, @Param("isOnboarded") boolean isOnboarded);
 
     @Query("SELECT wem FROM WalletExchangeMap wem JOIN wem.orders o WHERE o.orderId = :orderId")
     Optional<WalletExchangeMap> findWalletExchangeMapByOrderId(@Param("orderId") String orderId);

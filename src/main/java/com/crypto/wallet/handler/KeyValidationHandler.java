@@ -23,7 +23,7 @@ public class KeyValidationHandler {
 
     private final String VALIDATION_PATH = "/v1/cryptotrade/validate-keys/";
 
-    @Value("${cryptotrade.trade.api.baseUrl}")
+    @Value("${crypto.trade.api.baseUrl}")
     private String baseUrl;
 
     public boolean validateKey(String exchangeName, ValidationKey validationKey) throws Exception {

@@ -153,7 +153,7 @@ public class OrderService {
         for (Order order : orders) {
             orderResponseList.add(prepareOrderResponse(order,orderGroup));
         }
-        orderResponseList.sort(Comparator.comparingLong(OrderResponse::getCreateTime));
+        orderResponseList.sort(Comparator.comparingLong(OrderResponse::getCreateTime).reversed());
         return orderResponseList;
     }
 }

@@ -2,6 +2,7 @@ package com.crypto.wallet.controller;
 
 
 import com.common.library.response.ApiResponse;
+import com.common.library.response.wallet.WalletPortFolioResponse;
 import com.crypto.wallet.dto.ExchangeDto;
 import com.crypto.wallet.dto.ValidationKeyDto;
 import com.crypto.wallet.dto.WalletExchangeMapDto;
@@ -48,7 +49,7 @@ public class WalletResource {
     public ResponseEntity<ApiResponse<String>> validateKeys(@PathVariable("walletId") String walletId,
                                                             @PathVariable("exchangeName") String exchangeName) throws Exception {
         logger.info("POST:: UPDATE KEY VALIDATIONS");
-        walletService.validateKeys( exchangeName, walletId);
+        walletService.validateKeys(exchangeName, walletId);
         return ResponseEntity.ok(ApiResponse.success("VALIDATION KEYS UPDATED SUCCESSFULLY", null));
     }
 
@@ -67,6 +68,13 @@ public class WalletResource {
         List<ExchangeDto> onboardedExchanges = walletService.getOnboardedExchanges(walletId);
         return ResponseEntity.ok(ApiResponse.success("Successfully Retrieved Onboarded Exchanges",
                 onboardedExchanges));
+    }
 
+    @GetMapping("/{walletId}/portFolios")
+    public ResponseEntity<ApiResponse<List<WalletPortFolioResponse>>> getPortFolioDetails(@PathVariable("walletId") String walletId) throws Exception {
+        logger.info("Get Port Folio Details for the Wallet {}", walletId);
+        List<WalletPortFolioResponse> portFolioDetails = walletService.getPortFolioDetails(walletId);
+        return ResponseEntity.ok(ApiResponse.success("Successfully Retrieved Onboarded Exchanges",
+                portFolioDetails));
     }
 }
